@@ -1,4 +1,8 @@
-package com.example.web_ht_interior.service;
+package com.example.web_ht_interior.service.impl;
 
-public class AppRoleService {
+import com.example.web_ht_interior.service.IAppRoleService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AppRoleService implements IAppRoleService {
 }

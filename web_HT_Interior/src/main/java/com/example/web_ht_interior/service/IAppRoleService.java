@@ -1,2 +1,4 @@
-package com.example.web_ht_interior.service;public interface IAppRoleService {
+package com.example.web_ht_interior.service;
+
+public interface IAppRoleService {
 }

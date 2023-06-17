@@ -151,9 +151,9 @@
             </div>
         </div>
     </div>
-    <div class="buy-success d-flex justify-content-center align-items-center hide">
-        <p>Đặt hàng thành công</p>
-    </div>
+
+
+
     <div class="banner text-center">
         <div class="inner">
             <div class="container">
@@ -620,7 +620,7 @@
                                             </div>
                                             <div class="buttons d-flex ">
                                                 <button class="addCart"
-                                                        onclick="">
+                                                        onClick="">
                                                     <i class="fas fa-cart-plus"></i> Thêm vào giỏ
                                                 </button>
                                                 <!-- <button class="buyNow">Mua ngay</button> -->
@@ -935,7 +935,7 @@
                                         </div>
                                         <div class="buttons d-flex ">
                                             <button class="addCart"
-                                                    onclick="">
+                                                    onClick="">
                                                 <i class="fas fa-cart-plus"></i> Thêm vào giỏ
                                             </button>
                                             <!-- <button class="buyNow">Mua ngay</button> -->
@@ -1283,7 +1283,10 @@
                                             <input type="checkbox">Lưu mật khẩu
                                         </div>
                                         <div class="col-6 forget text-end">
-                                            <button class="email-forget" type="button" onclick="document.getElementById('email-confirm').style.display='block'">Quên mật khẩu</button>
+                                            <button class="email-forget" onClick="document.getElementById('email-confirm').style.display='block'"
+                                                    type="button">
+                                                Quên mật khẩu
+                                            </button>
                                         </div>
                                     </div>
                                     <p class="text-center">Hoặc</p>
@@ -1295,11 +1298,12 @@
                                             <img alt="" src="img/google.png">
                                         </a>
                                     </div>
-<!--                                    <form class="form-floating border border-primary">-->
+                                    <!--                                    <form class="form-floating border border-primary">-->
                                     <div class="wrapper-email" id="email-confirm">
                                         <hr style="color: red; border-style: dashed; border-width: 2px; margin: 10px 0;">
                                         <h1 class="text-center">Quên mật khẩu</h1>
-                                        <p style="color: gray">Vui lòng nhập email mà bạn đã đăng ký tài khoản để lấy lại mật khẩu của bạn.</p>
+                                        <p style="color: gray">Vui lòng nhập email mà bạn đã đăng ký tài khoản để lấy
+                                            lại mật khẩu của bạn.</p>
                                         <input class="email-again" placeholder="Nhập email của bạn"
                                                type="email">
 
@@ -1309,7 +1313,7 @@
                                             </button>
                                         </div>
                                     </div>
-<!--                                    </form>-->
+                                    <!--                                    </form>-->
 
                                 </div>
                             </div>
