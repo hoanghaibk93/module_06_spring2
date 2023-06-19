@@ -1,5 +1,68 @@
+import { useEffect, useState } from 'react';
+import AllProductList from './AllProductList';
 import './Shop.css'
+import ReactPaginate from "react-paginate";
+import { apiGetAllProductByType, apiGetAllProductType, apiGetAllProducts, apiGetAllRoomType } from '../../service/ShopService';
+import { da } from 'date-fns/locale';
+import { event } from 'jquery';
 export const Shop = () => {
+    const [productTypes, setProductTypes] = useState([]);
+    const [roomTypes, setRoomTypes] = useState([]);
+    const [productList, setProductList] = useState(null);
+    const [searchAndPage, setSearchAndPage] = useState({
+        page: 0,
+        product_type: 0,
+        room_type: 0
+    })
+
+    const fetchProductTypes = async () => {
+        const data = await apiGetAllProductType();
+        setProductTypes(data);
+    }
+    const featchRoomType = async () => {
+        const data = await apiGetAllRoomType();
+        setRoomTypes(data);
+    }
+    useEffect(() => {
+        fetchProductTypes()
+        featchRoomType();
+    }, [])
+
+   
+
+
+    const handlePageClick = async (event) => {
+        console.log(event.selected);
+        setSearchAndPage((prev) => ({ ...prev, page: event.selected }));
+    }
+
+    const handleTypeRoomChange = (event) => {
+        console.log(event.target.value);
+        console.log(searchAndPage);
+        setSearchAndPage((prev) => ({ ...prev, room_type: +event.target.value }))
+    }
+    const handleTypeProductChange = (event) => {
+        console.log(event.target.value);
+        console.log(searchAndPage);
+        setSearchAndPage((prev) => ({ ...prev, product_type: +event.target.value }))
+    }
+
+    const formatPrice = (n) => {
+        return n.toFixed(0).replace(/./g, function (c, i, a) {
+            return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+        });
+    };
+    const fetchProductList = async () => {
+        const data = await apiGetAllProductByType(searchAndPage);
+        console.log(data);
+        setProductList(data);
+    }
+    useEffect(() => {
+        console.log(searchAndPage);
+        fetchProductList()
+    }, [searchAndPage])
+
+
     return (
         <>
             <>
@@ -18,23 +81,62 @@ export const Shop = () => {
                         <div className="row">
                             <div className="col-lg-3 col-12">
                                 <div className="filter">
-                                    <div className="loaihang">
-                                        {/*                            <div class="accordion" id="accordionExample">*/}
-                                        {/*                                <div class="accordion-item">*/}
+                                    {/* <div className="loaihang">
+
                                         <div className="form-label">
                                             <select
                                                 aria-label="Default select example"
                                                 className=" type form-select"
                                                 name=""
+                                                onChange={handleSortChange}
                                             >
-                                                <option selected="">Loại phòng</option>
-                                                <option value={1}>Phòng ngủ</option>
-                                                <option value={2}>Phòng khách</option>
-                                                <option value={3}>Phòng bếp</option>
+                                                <option value="idProduct">Sắp xếp theo</option>
+                                                <option value="nameProduct">Tên sản phẩm</option>
+                                                <option value="brand">Tên Thương hiệu</option>
+                                                <option value="color">Màu sắc</option>
+                                                <option value="countryOfOrigin">Quốc gia</option>
+                                                <option value="originalPrice">Giá</option>
+
                                             </select>
                                         </div>
-                                        {/*                                </div>*/}
-                                        {/*                            </div>*/}
+
+                                    </div> */}
+
+                                    <div className="loaihang">
+                                        
+                                        <div className="form-label">
+                                            <select
+                                                aria-label="Default select example"
+                                                className=" type form-select"
+                                                name=""
+                                                onChange={handleTypeRoomChange}
+                                            >
+                                                <option value="0" selected="">Loại phòng</option>
+                                                {roomTypes.map((room, index) => (
+                                                    <option key={index} value={room.idRoomType}>{room.nameRoomType}</option>
+                                                ))}
+
+                                            </select>
+                                        </div>
+                                       
+                                    </div>
+                                    <div className="loaihang">
+                                    
+                                        <div className="form-label">
+                                            <select
+                                                aria-label="Default select example"
+                                                className=" type form-select"
+                                                name=""
+                                                onChange={handleTypeProductChange}
+                                            >
+                                                <option value="0" selected="">Loại sản phẩm</option>
+                                                {productTypes.map((pro, index) => (
+                                                    <option key={index} value={pro.idProductType}>{pro.nameProductType}</option>
+                                                ))}
+
+                                            </select>
+                                        </div>
+                                    
                                     </div>
                                     <div className="loctheogia">
                                         <div
@@ -159,261 +261,72 @@ export const Shop = () => {
                                 </div>
                                 <div className="trang1 trang">
                                     <div className="row">
-                                        <div className="col-lg-4 col-md-6  nopadding ban">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        src="img/ban/ban3/ban3.1.webp"
-                                                        alt=""
-                                                        className="product-img"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Bàn Narro Black Side
-                                                        </p>
-                                                        <div className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">2.200.000 đ</p>
-                                                            <p className="root-price">2.500.000 đ</p>
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
+                                        {productList &&
+                                            productList.content.map((pro, index) => (
+                                                <div key={index} className="col-lg-4 col-md-6  nopadding ban">
+                                                    <div className="product">
+                                                        <a href="">
+                                                            <img
+                                                                src={pro.image}
+                                                                alt=""
+                                                                className="product-img"
+                                                            />
+                                                            <div className="product-info">
+                                                                <p className="name-product text-center">
+                                                                    {pro.nameProduct}
+                                                                </p>
+                                                                <div className="price-product text-center d-flex align-items-center">
+                                                                    <p className="price">{formatPrice(pro.originalPrice)}<span> đ</span></p>
+                                                                    <p className="root-price">{formatPrice(pro.salePrice)}<span> đ</span></p>
+                                                                </div>
+                                                                <div className="rate d-flex">
+                                                                    <div className="stars">
+                                                                        <i className="fas fa-star" />
+                                                                        <i className="fas fa-star" />
+                                                                        <i className="fas fa-star" />
+                                                                        <i className="fas fa-star" />
+                                                                        <i className="fas fa-star" />
+                                                                    </div>
+                                                                    <div className="rate-number">
+                                                                        <p>16 đánh giá</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="buttons d-flex ">
+                                                                    <button className="addCart">
+                                                                        <i className="fas fa-cart-plus" /> Thêm vào giỏ
+                                                                    </button>
+                                                                    {/* <button class="buyNow">Mua ngay</button> */}
+                                                                </div>
                                                             </div>
-                                                            <div className="rate-number">
-                                                                <p>16 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus" /> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
+                                                        </a>
+                                                        {pro.originalPrice != pro.salePrice ? (
+                                                            <div className="discount">{(-(pro.originalPrice - pro.salePrice) / pro.originalPrice * 100).toFixed(0)}<span>%</span></div>) : ''}
                                                     </div>
-                                                </a>
-                                                <div className="discount">-20%</div>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-4 col-md-6 nopadding ban">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        src="img/ban/ban2/ban2.1.webp"
-                                                        alt=""
-                                                        className="product-img"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Bàn hình bầu dục Lenia Walnut
-                                                        </p>
-                                                        <div className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">3.200.000 đ</p>
-                                                            {/* <p class="root-price">300.000 đ</p> */}
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="far fa-star" />
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>8 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus" /> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-4 col-md-6 nopadding ge">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        src="img/ge/ge2/ge2.1.webp"
-                                                        alt=""
-                                                        className="product-img"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Ghế Nosh Grey Walnut{" "}
-                                                        </p>
-                                                        <div className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">1.500.000 đ</p>
-                                                            <p className="root-price">1.700.000 đ</p>
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="far fa-star" />
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>17 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus" /> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <div className="discount">-16%</div>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-4 col-md-6 nopadding ge">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        src="img/ge/ge4/ge4.1.webp"
-                                                        alt=""
-                                                        className="product-img"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Ghế đẩu màu đen Anco
-                                                        </p>
-                                                        <div className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">1.850.000 đ</p>
-                                                            {/* <p class="root-price">300.000 đ</p> */}
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="far fa-star" />
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>33 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus" />
-                                                                Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-4 col-md-6 nopadding sofa">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        src="img/sofa/sofa3/sofa3.1.webp"
-                                                        alt=""
-                                                        className="product-img"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Sofa Sven Charme Tan
-                                                        </p>
-                                                        <div className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">14.500.000 đ</p>
-                                                            <p className="root-price">16.000.000 đ</p>
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="far fa-star" />
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>18 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus" /> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <div className="discount">-20%</div>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-4 col-md-6 nopadding sofa">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        src="img/sofa/sofa4/sofa4.1.webp"
-                                                        alt=""
-                                                        className="product-img"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Sofa gỗ Olio xanh
-                                                        </p>
-                                                        <div className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">15.600.000 đ</p>
-                                                            {/* <p class="root-price">300.000 đ</p> */}
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="fas fa-star" />
-                                                                <i className="far fa-star" />
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>17 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus" /> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
+                                                </div>
+                                            ))};
                                     </div>
                                 </div>
-                                <div className="pagination justify-content-center d-flex">
-                                    <div className="btn btn-prev align-items-center d-flex">
-                                        <i className="fas fa-angle-double-left" />
-                                    </div>
-                                    <div className="btn btn-number" page={1}>
-                                        1
-                                    </div>
-                                    <div className="btn btn-number" page={2}>
-                                        2
-                                    </div>
-                                    <div className="btn btn-number" page={3}>
-                                        3
-                                    </div>
-                                    <div className="btn btn-next align-items-center d-flex">
-                                        <i className="fas fa-angle-double-right" />
-                                    </div>
-                                </div>
+                                {productList && (
+                                    <ReactPaginate
+                                        breakLabel="..."
+                                        nextLabel=">"
+                                        onPageChange={handlePageClick}
+                                        pageCount={productList.totalPages}
+                                        previousLabel="< "
+                                        containerClassName="pagination"
+                                        pageLinkClassName="page-num"
+                                        nextLinkClassName="page-num"
+                                        previousLinkClassName="page-num"
+                                        activeClassName="active"
+                                        disabledClassName="d-none"
+                                    />
+                                )}
                             </div>
+
                         </div>
                     </div>
                 </div>
+
             </>
 
 

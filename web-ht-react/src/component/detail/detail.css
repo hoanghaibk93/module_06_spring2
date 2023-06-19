@@ -215,19 +215,24 @@ img{
     background-color: whitesmoke;
     height: 200px;
 }
-.price-product .price{
+.price-products .price{
     /* width: 100%; */
     margin-bottom: 5px;
+    margin-left: 10px;
     font-size: 20px;
     font-weight: bold;
     color: #EB2528;
 }
-.price-product{
+.detail .soluong{
+    margin-left: 0px; 
+    justify-content: left;
+}
+.price-products{
     margin-top: 10px;
     margin-bottom: 0px;
     /* justify-content: center; */
 }
-.price-product .root-price{
+.price-products .root-price{
     margin-bottom: 3px;
     font-size: 12px;
     font-weight: bold;

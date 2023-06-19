@@ -1,3 +1,4 @@
+import SuggestProduct from './SuggestProduct';
 import './detail.css';
 
 export const Detail = () => {
@@ -52,7 +53,7 @@ export const Detail = () => {
                             <div className="main-info">
                                 <div className="product-info">
                                     <p className="name-product">Sofa Sven Charme Tan</p>
-                                    <div className="price-product text-center d-flex align-items-center">
+                                    <div className="price-products text-center d-flex align-items-center">
                                         <p className="price">14.500.000 đ</p>
                                         {/* <p class="root-price">4.000.000 đ</p> */}
                                     </div>
@@ -60,7 +61,7 @@ export const Detail = () => {
                                         Một chiếc bàn nhỏ gọn phù hợp với phong cách đơn giản nhưng đầy
                                         tinh tế và sang trọng.
                                     </p>
-                                    <div className="soluong d-flex align-items-center">
+                                    <div className="detail soluong d-flex align-items-center">
                                         <p className="sl-text">Số lượng: </p>
                                         <i className="fas fa-plus"/>
                                         <input type="text" defaultValue={1}/>
@@ -274,151 +275,8 @@ export const Detail = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="suggest">
-                        <div className="suggest-heading">Sản phẩm gợi ý</div>
-                        <div className="slider">
-                            <div className="product">
-                                <a href="">
-                                    <img
-                                        alt=""
-                                        className="product-img"
-                                        src="img/ban/ban3/ban3.1.webp"
-                                    />
-                                    <div className="product-info">
-                                        <p className="name-product text-center">Bàn Narro Black Side</p>
-                                        <div className="price-product text-center d-flex align-items-center">
-                                            <p className="price">2.200.000 đ</p>
-                                            <p className="root-price">2.500.000 đ</p>
-                                        </div>
-                                        <div className="rate d-flex">
-                                            <div className="stars">
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                            </div>
-                                            <div className="rate-number">
-                                                <p>16 đánh giá</p>
-                                            </div>
-                                        </div>
-                                        <div className="buttons d-flex ">
-                                            <button className="addCart">
-                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                            </button>
-                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                        </div>
-                                    </div>
-                                </a>
-                                <div className="discount">-20%</div>
-                            </div>
-                            <div className="product">
-                                <a href="">
-                                    <img
-                                        alt=""
-                                        className="product-img"
-                                        src="img/ban/ban2/ban2.1.webp"
-                                    />
-                                    <div className="product-info">
-                                        <p className="name-product text-center">
-                                            Bàn hình bầu dục Lenia Walnut
-                                        </p>
-                                        <div className="price-product text-center d-flex align-items-center">
-                                            <p className="price">3.200.000 đ</p>
-                                            {/* <p class="root-price">300.000 đ</p> */}
-                                        </div>
-                                        <div className="rate d-flex">
-                                            <div className="stars">
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="far fa-star"/>
-                                            </div>
-                                            <div className="rate-number">
-                                                <p>8 đánh giá</p>
-                                            </div>
-                                        </div>
-                                        <div className="buttons d-flex ">
-                                            <button className="addCart">
-                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                            </button>
-                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div className="product">
-                                <a href="">
-                                    <img alt="" className="product-img" src="img/ge/ge2/ge2.1.webp"/>
-                                    <div className="product-info">
-                                        <p className="name-product text-center">
-                                            Ghế Nosh Grey Walnut{" "}
-                                        </p>
-                                        <div className="price-product text-center d-flex align-items-center">
-                                            <p className="price">1.500.000 đ</p>
-                                            <p className="root-price">1.700.000 đ</p>
-                                        </div>
-                                        <div className="rate d-flex">
-                                            <div className="stars">
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="far fa-star"/>
-                                            </div>
-                                            <div className="rate-number">
-                                                <p>17 đánh giá</p>
-                                            </div>
-                                        </div>
-                                        <div className="buttons d-flex ">
-                                            <button className="addCart">
-                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                            </button>
-                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                        </div>
-                                    </div>
-                                </a>
-                                <div className="discount">-16%</div>
-                            </div>
-                            <div className="product">
-                                <a href="">
-                                    <img
-                                        alt=""
-                                        className="product-img"
-                                        src="img/ban/ban4/ban4.1.webp"
-                                    />
-                                    <div className="product-info">
-                                        <p className="name-product text-center">
-                                            Bàn Amoeba Wild Walnut
-                                        </p>
-                                        <div className="price-product text-center d-flex align-items-center">
-                                            <p className="price">2.200.000 đ</p>
-                                            {/* <p class="root-price">300.000 đ</p> */}
-                                        </div>
-                                        <div className="rate d-flex">
-                                            <div className="stars">
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                                <i className="fas fa-star"/>
-                                            </div>
-                                            <div className="rate-number">
-                                                <p>12 đánh giá</p>
-                                            </div>
-                                        </div>
-                                        <div className="buttons d-flex ">
-                                            <button className="addCart">
-                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                            </button>
-                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <SuggestProduct/>
+                    
                 </div>
             </div>
         </>

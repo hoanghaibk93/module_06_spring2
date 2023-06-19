@@ -2,19 +2,34 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper';
 import "swiper/css/navigation";
-
+import { apiGetAllProduct } from '../../service/HomeService'
 import 'swiper/css';
 
 const FeatureProducts = () => {
-    const [currentTab,setCurrentTab]  = useState('new-product')
-    const [products,setProducts]  = useState([]);
+    const [currentTab, setCurrentTab] = useState('new-product')
+    const [products, setProducts] = useState([]);
+    const fetchProducts = async () => {
+        const data = await apiGetAllProduct();
+        console.log(data)
+        setProducts(data);
+    }
+
     useEffect(() => {
-        // gọi api get list product by type
-        const productFromApi = [1,2,3,4,5,6,7].map((pro => currentTab + pro))
-        setProducts(productFromApi)
+        // const productFromApi = 
+        // console.log(productFromApi)
+        // // const productFromApi = [1,2,3,4,5,6,7].map((pro => currentTab + pro))
+        // setProducts(productFromApi)
+        fetchProducts()
     }, [currentTab])
+
+    const formatPrice = (n) => {
+        return n.toFixed(0).replace(/./g, function (c, i, a) {
+            return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+        });
+    };
+
     return (
-        
+
 
         <div className="feature-products text-center">
             <div className="container-lg">
@@ -54,18 +69,18 @@ const FeatureProducts = () => {
                         <Swiper
                             modules={[Navigation]}
                             navigation={true}
-                            breakpoints= {{
+                            breakpoints={{
                                 480: {
-                                slidesPerView: 2,
-                                spaceBetween: 10
+                                    slidesPerView: 2,
+                                    spaceBetween: 10
                                 },
                                 640: {
-                                slidesPerView: 3,
-                                spaceBetween: 10
+                                    slidesPerView: 3,
+                                    spaceBetween: 10
                                 },
                                 900: {
-                                slidesPerView: 4,
-                                spaceBetween: 10
+                                    slidesPerView: 4,
+                                    spaceBetween: 10
                                 }
                             }}
                             spaceBetween={20}
@@ -73,31 +88,31 @@ const FeatureProducts = () => {
                             onSlideChange={() => console.log('slide change')}
                             onSwiper={(swiper) => console.log(swiper)}
                         >
-                            {products.map(product => 
-                                <SwiperSlide key={product}> 
+                            {products.map(product =>
+                                <SwiperSlide key={product}>
                                     <div className="product">
                                         <a href="">
                                             <img
                                                 alt=""
                                                 className="product-img"
-                                                src="img/ban/ban1/ban1.1.webp"
+                                                src={product.image}
                                             />
                                             <div className="product-info">
                                                 <p className="name-product text-center">
-                                                    {product}
+                                                    {product.nameProduct}
                                                 </p>
                                                 <div
                                                     className="price-product text-center d-flex align-items-center">
-                                                    <p className="price">3.700.000 đ</p>
-                                                    <p className="root-price">4000.000 đ</p>
+                                                    <p className="price">{formatPrice(product.originalPrice)}<span> đ</span></p>
+                                                    <p className="root-price">{formatPrice(product.salePrice)}<span> đ</span></p>
                                                 </div>
                                                 <div className="rate d-flex">
                                                     <div className="stars">
-                                                        <i className="fas fa-star"/>
-                                                        <i className="fas fa-star"/>
-                                                        <i className="fas fa-star"/>
-                                                        <i className="fas fa-star"/>
-                                                        <i className="fas fa-star"/>
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
                                                     </div>
                                                     <div className="rate-number">
                                                         <p>21 đánh giá</p>
@@ -105,15 +120,17 @@ const FeatureProducts = () => {
                                                 </div>
                                                 <div className="buttons d-flex ">
                                                     <button className="addCart">
-                                                        <i className="fas fa-cart-plus"/> Thêm vào giỏ
+                                                        <i className="fas fa-cart-plus" /> Thêm vào giỏ
                                                     </button>
                                                     {/* <button class="buyNow">Mua ngay</button> */}
                                                 </div>
                                             </div>
                                         </a>
-                                        <div className="discount">-16%</div>
+                                        {product.originalPrice != product.salePrice ? (
+                                            <div className="discount">{(-(product.originalPrice - product.salePrice) / product.originalPrice * 100).toFixed(0)}<span>%</span></div>) : ''}
                                     </div>
-                            </SwiperSlide>
+
+                                </SwiperSlide>
                             )}
                         </Swiper>
                     </div>

@@ -685,7 +685,7 @@ img{
     font-weight: bold;
 }
 .nav-tabs{
-    justify-content: center;
+    /* justify-content: center; */
     margin-bottom: 10px;
 }
 .feature-products .nav-item{

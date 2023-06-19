@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import AuthModal from '../../auth/AuthModal';
 import './Header.css'
 import React, { useState } from "react";
@@ -102,22 +103,22 @@ export const Header = () => {
                                     >
                                         <ul className="navbar-nav  mb-2 mb-lg-0 justify-content-center">
                                             <li className="nav-item">
-                                                <a
+                                                <Link
                                                     aria-current="page"
                                                     className="nav-link active home"
-                                                    href="index.html"
+                                                    to="/"
                                                 >
                                                     Trang chủ
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="nav-item">
-                                                <a
+                                                <Link
                                                     aria-current="page"
                                                     className="nav-link active"
-                                                    href="shop.html"
+                                                   to="/shop"
                                                 >
                                                     Sản phẩm
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="nav-item">
                                                 <a aria-current="page" className="nav-link active" href="">
@@ -148,10 +149,10 @@ export const Header = () => {
                                             </a>
                                         </li>
                                         <li>
-                                            <a className="icon-buy" href="">
+                                            <Link className="icon-buy" to="/cart">
                                                 <i className="fas fa-shopping-cart" />
                                                 <div className="number-buy">0</div>
-                                            </a>
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
