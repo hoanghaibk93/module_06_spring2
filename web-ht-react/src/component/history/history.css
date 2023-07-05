@@ -1,0 +1,17 @@
+.detail-order{
+  padding: 4px;
+  border-width: 1px;
+  border-radius: 8px;
+  background-color: #F3F4F6;
+  cursor: pointer;
+}
+
+.detail-order:hover{
+  background-color: #839083;
+  color: #fff;
+}
+.detail-order.active{
+ background: #c89551;
+ color: #fff;
+
+}

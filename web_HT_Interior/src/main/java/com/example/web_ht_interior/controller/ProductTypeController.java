@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product_type")
+@RequestMapping("/api/public/product_type")
 @CrossOrigin("*")
 public class ProductTypeController {
     @Autowired

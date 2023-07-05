@@ -1,306 +1,157 @@
+import "swiper/css";
+import "swiper/css/grid";
+import "swiper/css/pagination";
+import { Grid, Pagination } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { apiGetAllProduct } from "../../service/HomeService";
+import { useEffect, useState } from "react";
+import { useContext } from 'react';
+import { ValueIconCartContext } from '../../service/ValueIconCartProvider';
+import { apiCreateCart } from "../../service/CartService";
+import { FormatPrice } from "../../service/FormatPrice";
+import { Link, useNavigate } from "react-router-dom";
+import './allProduct.css'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const AllProduct = () => {
+    const [products, setProducts] = useState([]);
+    const { valueIconCart, setValueIconCart } = useContext(ValueIconCartContext);
+    const fetchProducts = async () => {
+        const data = await apiGetAllProduct();
+        console.log(data)
+        setProducts(data);
+    }
+    const navigate = useNavigate()
+    const username = localStorage.getItem("username");
+    useEffect(() => {
+        document.title = "Trang chủ"
+        fetchProducts();
+    }, [])
+
+    const handleAddCartItem = async (product) => {
+        try {
+            if (username == null) {
+            }
+            const value = {
+                quantity: 1,
+                product: product
+            }
+            const data = await apiCreateCart(value);
+            if (data?.status === 201) {
+                setValueIconCart(valueIconCart + 1);
+                toast.success("Sản phẩm đã được thêm vào giỏ hàng", { autoClose: 3000 });
+            }
+        } catch (error) {
+            if (error.response.status === 400) {
+                toast.error("Sản phẩm trong kho đã hết, vui lòng chọn sản phẩm khác", { autoClose: 3000 })
+            }
+        }
+    }
 
     return (
         <div className="all-product text-center">
-                        <div className="container">
-                            <p className="all-heading">Sản phẩm</p>
-                            <p className="all-intro">Tất cả sản phẩm có sẵn tại cửa hàng</p>
-                            <div className="products">
-                                <div className="container">
-                                    <div className="row">
-                                        <div className="col-lg-3 col-md-6 col-12 nopadding">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        alt=""
-                                                        className="product-img"
-                                                        src="img/sofa/sofa4/sofa4.1.webp"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Sofa gỗ Olio xanh
-                                                        </p>
-                                                        <div
-                                                            className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">15.600.000 đ</p>
-                                                            {/* <p class="root-price">1.500.000 đ</p> */}
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="far fa-star"/>
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>17 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
+            <div className="container">
+                <p className="all-heading">Sản phẩm</p>
+                <p className="all-intro">Tất cả sản phẩm có sẵn tại cửa hàng</p>
+                <div className="products">
+                    <div className="container">
+                        <Swiper
+                            // slidesPerView={4}
+                            grid={{
+                                rows: 1,
+                            }}
+                            breakpoints={{
+
+                                480: {
+                                    slidesPerView: 2,
+                                    spaceBetween: 10
+
+                                },
+                                640: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 10
+                                },
+                                900: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 10
+                                }
+                            }}
+                            pagination={{
+                                clickable: true,
+                            }}
+                            modules={[Grid, Pagination]}
+                            className="mySwiper"
+                        >
+                            {products.map(product =>
+                                <SwiperSlide key={product.idProduct}>
+
+                                    <div className="product">
+                                        <Link to={`detail/${product.idProduct}`} >
+                                            <img
+                                                alt=""
+                                                className="product-img"
+                                                src={product.image}
+                                            />
+                                        </Link>
+                                        <div className="product-info">
+                                            <Link to={`detail/${product.idProduct}`} >
+                                                <p className="name-product text-center">
+                                                    {product.nameProduct}
+                                                </p>
+                                                <div
+                                                    className="price-product text-center d-flex align-items-center">
+                                                    <p className="price">{FormatPrice(product?.originalPrice)}<span> đ</span></p>
+                                                    <p className="root-price">{FormatPrice(product?.salePrice)}<span> đ</span></p>
+                                                </div>
+
+                                                <div className="rate d-flex">
+                                                    <div className="stars">
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
+                                                        <i className="fas fa-star" />
                                                     </div>
-                                                </a>
-                                                {/* <div class="discount">
-                              -20%
-                          </div> */}
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-3 col-md-6 col-12 nopadding">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        alt=""
-                                                        className="product-img"
-                                                        src="img/ban/ban1/ban1.1.webp"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Bàn cà phê Mara Walnut
-                                                        </p>
-                                                        <div
-                                                            className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">3.700.000 đ</p>
-                                                            <p className="root-price">4.000.000 đ</p>
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="far fa-star"/>
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>21 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart" onClick="">
-                                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
+                                                    <div className="rate-number">
+                                                        <p>21 đánh giá</p>
                                                     </div>
-                                                </a>
-                                                <div className="discount">-20%</div>
-                                            </div>
+                                                </div>
+                                            </Link>
+                                            {product?.quantity > 0 ?
+                                                (<div className="buttons d-flex ">
+                                                    {username !== null ?
+                                                        (<button className="addCart" onClick={() => { handleAddCartItem(product) }}>
+
+                                                            <i className="fas fa-cart-plus" /> Thêm vào giỏ
+                                                        </button>) :
+                                                        (<button className="addCart" data-bs-target="#exampleModal"
+                                                            data-bs-toggle="modal">
+                                                            <i className="fas fa-cart-plus" /> Thêm vào giỏ
+                                                        </button>)
+                                                    }
+                                                </div>) :
+
+                                                <div className="buttons d-flex ">
+                                                    <button className="addCart-empty">
+                                                        <i className="fas fa-exclamation-circle" /> Hết hàng
+                                                    </button>
+                                                </div>
+                                            }
                                         </div>
-                                        <div className="col-lg-3 col-md-6 col-12 nopadding">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        alt=""
-                                                        className="product-img"
-                                                        src="img/sofa/sofa2/sofa2.1.webp"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Ghế sofa màu trắng Abisko
-                                                        </p>
-                                                        <div
-                                                            className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">20.400.000 đ</p>
-                                                            <p className="root-price">25.000.000 đ</p>
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="far fa-star"/>
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>15 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <div className="discount">-20%</div>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-3 col-md-6 col-12 nopadding">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        alt=""
-                                                        className="product-img"
-                                                        src="img/ban/ban2/ban2.1.webp"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Bàn hình bầu dục Lenia Walnut
-                                                        </p>
-                                                        <div
-                                                            className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">3.200.000 đ</p>
-                                                            {/* <p class="root-price">300.000 đ</p> */}
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="far fa-star"/>
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>8 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
+                                        {product?.originalPrice != product?.salePrice ? (
+                                            <div className="discount">{(-(product?.originalPrice - product?.salePrice) / product.originalPrice * 100).toFixed(0)}<span>%</span></div>) : ''}
                                     </div>
-                                </div>
-                            </div>
-                            <div className="products">
-                                <div className="container">
-                                    <div className="row">
-                                        <div className="col-lg-3 col-md-6 col-12 nopadding">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        alt=""
-                                                        className="product-img"
-                                                        src="img/ban/ban3/ban3.1.webp"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Bàn Narro Black Side
-                                                        </p>
-                                                        <div
-                                                            className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">2.200.000 đ</p>
-                                                            <p className="root-price">2.500.000 đ</p>
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="far fa-star"/>
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>16 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                                <div className="discount">-20%</div>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-3 col-md-6 col-12 nopadding">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        alt=""
-                                                        className="product-img"
-                                                        src="img/ge/ge3/ge3.1.webp"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Ghế salon da đen Lento
-                                                        </p>
-                                                        <div
-                                                            className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">1.700.000 đ</p>
-                                                            {/* <p class="root-price">300.000 đ</p> */}
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="far fa-star"/>
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>12 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div className="col-lg-3 col-md-6 col-12 nopadding">
-                                            <div className="product">
-                                                <a href="">
-                                                    <img
-                                                        alt=""
-                                                        className="product-img"
-                                                        src="img/sofa/sofa3/sofa3.1.webp"
-                                                    />
-                                                    <div className="product-info">
-                                                        <p className="name-product text-center">
-                                                            Sofa Sven Charme Tan
-                                                        </p>
-                                                        <div
-                                                            className="price-product text-center d-flex align-items-center">
-                                                            <p className="price">14.500.000 đ</p>
-                                                            {/* <p class="root-price">300.000 đ</p> */}
-                                                        </div>
-                                                        <div className="rate d-flex">
-                                                            <div className="stars">
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="fas fa-star"/>
-                                                                <i className="far fa-star"/>
-                                                            </div>
-                                                            <div className="rate-number">
-                                                                <p>12 đánh giá</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="buttons d-flex ">
-                                                            <button className="addCart">
-                                                                <i className="fas fa-cart-plus"/> Thêm vào giỏ
-                                                            </button>
-                                                            {/* <button class="buyNow">Mua ngay</button> */}
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="">
-                                <button className="all-button">Xem thêm</button>
-                            </a>
-                        </div>
+                                </SwiperSlide>
+                            )}
+                        </Swiper>
                     </div>
+                </div>
+
+                {/* <a href="">
+                    <button className="all-button">Xem thêm</button>
+                </a> */}
+            </div >
+        </div >
     )
 }
 export default AllProduct;

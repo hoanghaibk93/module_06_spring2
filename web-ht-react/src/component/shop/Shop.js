@@ -2,18 +2,51 @@ import { useEffect, useState } from 'react';
 import AllProductList from './AllProductList';
 import './Shop.css'
 import ReactPaginate from "react-paginate";
-import { apiGetAllProductByType, apiGetAllProductType, apiGetAllProducts, apiGetAllRoomType } from '../../service/ShopService';
-import { da } from 'date-fns/locale';
-import { event } from 'jquery';
+import { apiGetAllProductByName, apiGetAllProductByType, apiGetAllProductPopular, apiGetAllProductType, apiGetAllProducts, apiGetAllRoomType } from '../../service/ShopService';
+import { Link, useNavigate } from 'react-router-dom';
+import { apiCreateCart } from '../../service/CartService';
+import { useContext } from 'react';
+import { ValueIconCartContext } from '../../service/ValueIconCartProvider';
+import { FormatPrice } from '../../service/FormatPrice';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 export const Shop = () => {
     const [productTypes, setProductTypes] = useState([]);
     const [roomTypes, setRoomTypes] = useState([]);
-    const [productList, setProductList] = useState(null);
+    const [productList, setProductList] = useState([]);
+    const [productListPopular, setProductListPolular] = useState();
     const [searchAndPage, setSearchAndPage] = useState({
         page: 0,
+        sort: 'idProduct',
         product_type: 0,
-        room_type: 0
+        room_type: 0,
+        name: ''
     })
+    const { valueIconCart, setValueIconCart } = useContext(ValueIconCartContext);
+    const username = localStorage.getItem("username");
+    const displayMaxCount = 4;
+    let displayCount = 0;
+    const handleAddCartItem = async (product) => {
+        try {
+            const value = {
+                quantity: 1,
+                product: product
+            }
+            const data = await apiCreateCart(value);
+            if (data?.status === 201) {
+                setValueIconCart(valueIconCart + 1);
+                toast.success("Sản phẩm đã được thêm vào giỏ hàng", { autoClose: 3000 });
+            }
+        } catch (error) {
+            if (error.response.status === 400) {
+                toast.error("Sản phẩm trong kho đã hết, vui lòng chọn sản phẩm khác", { autoClose: 3000 })
+            }
+        }
+    }
+    const fetchProductPopular = async () => {
+        const data = await apiGetAllProductPopular();
+        setProductListPolular(data);
+    }
 
     const fetchProductTypes = async () => {
         const data = await apiGetAllProductType();
@@ -24,86 +57,89 @@ export const Shop = () => {
         setRoomTypes(data);
     }
     useEffect(() => {
+        document.title = "Sản phẩm"
         fetchProductTypes()
         featchRoomType();
+        fetchProductPopular();
     }, [])
+    const fetchProductList = async () => {
+        const data = await apiGetAllProductByType(searchAndPage);
+        setProductList(data);
+    }
+    useEffect(() => {
+        if (searchAndPage.name != "") {
+            fetchProductListByName()
+        } else {
+            fetchProductList()
+        }
 
-   
-
+    }, [searchAndPage])
 
     const handlePageClick = async (event) => {
         console.log(event.selected);
         setSearchAndPage((prev) => ({ ...prev, page: event.selected }));
     }
 
+
     const handleTypeRoomChange = (event) => {
         console.log(event.target.value);
         console.log(searchAndPage);
-        setSearchAndPage((prev) => ({ ...prev, room_type: +event.target.value }))
+        setSearchAndPage((prev) => ({ ...prev, room_type: +event.target.value, page: 0}))
     }
     const handleTypeProductChange = (event) => {
         console.log(event.target.value);
         console.log(searchAndPage);
-        setSearchAndPage((prev) => ({ ...prev, product_type: +event.target.value }))
+        setSearchAndPage((prev) => ({ ...prev, product_type: +event.target.value, page: 0}))
     }
 
-    const formatPrice = (n) => {
-        return n.toFixed(0).replace(/./g, function (c, i, a) {
-            return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
-        });
-    };
-    const fetchProductList = async () => {
-        const data = await apiGetAllProductByType(searchAndPage);
-        console.log(data);
+  
+    const handleSearchByNameChange = async (event) => {
+        setSearchAndPage((prev) => ({ ...prev, name: event.target.value, page: 0}))
+        //  setSearchAndPage((prev) => ({ ...prev, page: event.selected }));
+        console.log(event.target.value);
+    }
+    const fetchProductListByName = async () => {
+        const data = await apiGetAllProductByName(searchAndPage);
         setProductList(data);
     }
-    useEffect(() => {
-        console.log(searchAndPage);
-        fetchProductList()
-    }, [searchAndPage])
+    const handSortByPriceDsc = async () => {
+        if (searchAndPage.sort != 'salePrice') {
+            setSearchAndPage((prev) => ({ ...prev, sort: 'salePrice' }))
+        } else {
+            setSearchAndPage((prev) => ({ ...prev, sort: 'idProduct' }))
+        }
+    }
 
+    const handleSortByPriceAsc = async () => {
+        if (searchAndPage.sort != 'originalPrice') {
+            setSearchAndPage((prev) => ({ ...prev, sort: 'originalPrice' }))
+        } else {
+            setSearchAndPage((prev) => ({ ...prev, sort: 'idProduct' }))
+        }
+    }
 
     return (
         <>
             <>
-                <div className="banner">
+                <div className="banner-shop">
                     <div className="inner">
                         <div className="container text-center">
                             <p className="title-heading">SẢN PHẨM</p>
                             <p className="intro">
-                                <a href="index.html">Trang chủ</a>/ <a href="shop.html">Sản phẩm</a>
+                                <a href="/">Trang chủ</a>/ <Link href="/shop">Sản phẩm</Link>
                             </p>
                         </div>
                     </div>
                 </div>
+
                 <div className="shop">
                     <div className="container">
                         <div className="row">
                             <div className="col-lg-3 col-12">
                                 <div className="filter">
-                                    {/* <div className="loaihang">
-
-                                        <div className="form-label">
-                                            <select
-                                                aria-label="Default select example"
-                                                className=" type form-select"
-                                                name=""
-                                                onChange={handleSortChange}
-                                            >
-                                                <option value="idProduct">Sắp xếp theo</option>
-                                                <option value="nameProduct">Tên sản phẩm</option>
-                                                <option value="brand">Tên Thương hiệu</option>
-                                                <option value="color">Màu sắc</option>
-                                                <option value="countryOfOrigin">Quốc gia</option>
-                                                <option value="originalPrice">Giá</option>
-
-                                            </select>
-                                        </div>
-
-                                    </div> */}
 
                                     <div className="loaihang">
-                                        
+
                                         <div className="form-label">
                                             <select
                                                 aria-label="Default select example"
@@ -118,10 +154,10 @@ export const Shop = () => {
 
                                             </select>
                                         </div>
-                                       
+
                                     </div>
                                     <div className="loaihang">
-                                    
+
                                         <div className="form-label">
                                             <select
                                                 aria-label="Default select example"
@@ -136,106 +172,39 @@ export const Shop = () => {
 
                                             </select>
                                         </div>
-                                    
+
                                     </div>
-                                    <div className="loctheogia">
-                                        <div
-                                            className="accordion accordion-flush"
-                                            id="accordionFlushExample"
-                                        >
-                                            <div className="accordion-item">
-                                                <h2 className="accordion-header" id="flush-headingOne">
-                                                    <button
-                                                        className="accordion-button collapsed"
-                                                        type="button"
-                                                        data-bs-toggle="collapse"
-                                                        data-bs-target="#flush-collapseOne"
-                                                        aria-expanded="false"
-                                                        aria-controls="flush-collapseOne"
-                                                    >
-                                                        Mức giá
-                                                    </button>
-                                                </h2>
-                                                <div
-                                                    id="flush-collapseOne"
-                                                    className="accordion-collapse collapse"
-                                                    aria-labelledby="flush-headingOne"
-                                                    data-bs-parent="#accordionFlushExample"
-                                                >
-                                                    <div className="accordion-body text-center">
-                                                        <div className="ranger-slider">
-                                                            <div id="slider-range" />
-                                                            <div className="price-filter d-flex align-items-center justify-content-center">
-                                                                <p>Giá:</p>
-                                                                <strong /> <span id="slider-range-value1" />
-                                                                <span>-</span>
-                                                                <strong /> <span id="slider-range-value2" />
-                                                            </div>
-                                                        </div>
-                                                        <button className="button-filter">Lọc</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div className="selling-products">
                                     <p className="selling-title">Sản phẩm bán chạy</p>
-                                    <hr />
-                                    <a href="">
-                                        <div className="row">
-                                            <div className="col-5 ">
-                                                <img src="img/ban/ban1/ban1.1.webp" alt="" />
-                                            </div>
-                                            <div className="col-7">
-                                                <div className="selling-name">Bàn Mara Walnut</div>
-                                                <div className="selling-price">3.700.000đ</div>
-                                                <div className="selling-star">
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="">
-                                        <div className="row">
-                                            <div className="col-5 ">
-                                                <img src="img/ge/ge2/ge2.1.webp" alt="" />
-                                            </div>
-                                            <div className="col-7">
-                                                <div className="selling-name">Ghế Nosh Grey Walnut</div>
-                                                <div className="selling-price">1.500.000đ</div>
-                                                <div className="selling-star">
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <a href="">
-                                        <div className="row">
-                                            <div className="col-5 ">
-                                                <img src="img/sofa/sofa1/sofa1.1.webp" alt="" />
-                                            </div>
-                                            <div className="col-7">
-                                                <div className="selling-name">Sofa gỗ Charme Tan</div>
-                                                <div className="selling-price">19.500.000đ</div>
-                                                <div className="selling-star">
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                    <i className="fas fa-star" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                                    {productListPopular?.map((pro, index) => {
+                                        if (displayCount < displayMaxCount) {
+                                            displayCount++
+                                            return (
+                                                <Link to={`/detail/${pro.idProduct}`}>
+                                                    <div className="row">
+                                                        <div className="col-5 ">
+                                                            <img src={pro.image} alt="" />
+                                                        </div>
+                                                        <div className="col-7">
+                                                            <div className="selling-name">{pro.nameProduct}</div>
+                                                            <div className="selling-price">{FormatPrice(pro.salePrice)}<span> đ</span></div>
+                                                            <div className="selling-star">
+                                                                <i className="fas fa-star" />
+                                                                <i className="fas fa-star" />
+                                                                <i className="fas fa-star" />
+                                                                <i className="fas fa-star" />
+                                                                <i className="fas fa-star" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            )
+                                        }
+                                        return null;
+                                    })}
+
                                 </div>
                             </div>
                             <div className="col-lg-9 col-12">
@@ -243,41 +212,54 @@ export const Shop = () => {
                                     <div className="search-name">
                                         <input
                                             style={{}}
-                                            className="form-control form-control-lg"
+                                            className="form-control"
                                             type="text"
                                             placeholder="Tìm kiếm..."
+                                            onChange={handleSearchByNameChange}
+                                            value={searchAndPage.name}
                                         />
-                                        {/*                            <i class="fas fa-search"></i>*/}
                                     </div>
-                                    <p className="giacao">
-                                        <i className="fas fa-sort-amount-up" />
-                                        Giá cao
-                                    </p>
-                                    <p className="giathap">
-                                        <i className="fas fa-sort-amount-down-alt" />
-                                        Giá thấp
-                                    </p>
-                                    {/*                        <p class="xemnhieu"><i class="fas fa-eye"></i>Xem nhiều</p>*/}
+                                    <div className='d-flex gap-2'>
+                                        <p className={`giacao ${searchAndPage.sort === 'salePrice' ? 'active' : ''}`} onClick={handSortByPriceDsc}>
+                                            <i className="fas fa-sort-amount-up" />
+                                            Giá cao
+                                        </p>
+                                        <p className={`giathap ${searchAndPage.sort === 'originalPrice' ? 'active' : ''}`} onClick={handleSortByPriceAsc}>
+                                            <i className="fas fa-sort-amount-down-alt" />
+                                            Giá thấp
+                                        </p>
+
+                                    </div>
                                 </div>
                                 <div className="trang1 trang">
                                     <div className="row">
-                                        {productList &&
-                                            productList.content.map((pro, index) => (
-                                                <div key={index} className="col-lg-4 col-md-6  nopadding ban">
+                                        {productList?.content?.length === 0 ?
+                                            <div>
+                                                <h3 className='search-name'>Tìm kiếm không có kết quả</h3>
+                                                <p className='search-name2'>Xin lỗi, chúng tôi không thể tìm được kết quả hợp với tìm kiếm của bạn</p>
+                                                <i className="fas fa-search icon-search" />
+                                            </div> :
+                                            productList?.content?.map((pro, index) => (
+                                                <div key={index} className="col-lg-4 col-md-6 p-2  ban">
                                                     <div className="product">
-                                                        <a href="">
+                                                        <Link to={`/detail/${pro.idProduct}`}>
                                                             <img
                                                                 src={pro.image}
                                                                 alt=""
                                                                 className="product-img"
                                                             />
-                                                            <div className="product-info">
+                                                        </Link>
+                                                        <div className="product-info">
+                                                            <Link to={`/detail/${pro.idProduct}`}>
                                                                 <p className="name-product text-center">
                                                                     {pro.nameProduct}
                                                                 </p>
                                                                 <div className="price-product text-center d-flex align-items-center">
-                                                                    <p className="price">{formatPrice(pro.originalPrice)}<span> đ</span></p>
-                                                                    <p className="root-price">{formatPrice(pro.salePrice)}<span> đ</span></p>
+                                                                    <p className="price">{FormatPrice(pro.salePrice)}<span> đ</span></p>
+                                                                    {pro.salePrice != pro.originalPrice ? (
+                                                                        <p className="root-price">{FormatPrice(pro.originalPrice)}<span> đ</span></p>
+                                                                    ) : ''
+                                                                    }
                                                                 </div>
                                                                 <div className="rate d-flex">
                                                                     <div className="stars">
@@ -291,19 +273,34 @@ export const Shop = () => {
                                                                         <p>16 đánh giá</p>
                                                                     </div>
                                                                 </div>
+                                                            </Link>
+                                                            {pro?.quantity > 0 ?
+                                                                (<div className="buttons d-flex ">
+                                                                    {username !== null ?
+                                                                        (<button className="addCart" onClick={() => { handleAddCartItem(pro) }}>
+
+                                                                            <i className="fas fa-cart-plus" /> Thêm vào giỏ
+                                                                        </button>) :
+                                                                        (<button className="addCart" data-bs-target="#exampleModal"
+                                                                            data-bs-toggle="modal">
+                                                                            <i className="fas fa-cart-plus" /> Thêm vào giỏ
+                                                                        </button>)
+                                                                    }
+                                                                </div>) :
+
                                                                 <div className="buttons d-flex ">
-                                                                    <button className="addCart">
-                                                                        <i className="fas fa-cart-plus" /> Thêm vào giỏ
+                                                                    <button className="addCart-empty">
+                                                                        <i className="fas fa-exclamation-circle" /> Hết hàng
                                                                     </button>
-                                                                    {/* <button class="buyNow">Mua ngay</button> */}
                                                                 </div>
-                                                            </div>
-                                                        </a>
+                                                            }
+                                                        </div>
+
                                                         {pro.originalPrice != pro.salePrice ? (
                                                             <div className="discount">{(-(pro.originalPrice - pro.salePrice) / pro.originalPrice * 100).toFixed(0)}<span>%</span></div>) : ''}
                                                     </div>
                                                 </div>
-                                            ))};
+                                            ))}
                                     </div>
                                 </div>
                                 {productList && (

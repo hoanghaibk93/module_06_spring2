@@ -15,8 +15,8 @@ public class ProductService implements IProductService {
     @Autowired
     private IProductRepository productRepository;
     @Override
-    public List<Product> findAllProduct() {
-        return productRepository.findAll();
+    public List<Product> findAllByOrderByIdProductDesc() {
+        return productRepository.findAllByOrderByIdProductDesc();
     }
 
 //    @Override
@@ -45,12 +45,37 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<Product> findAllByRoomType_IdRoomTypeAndProductType_IdProductTyp(Integer idProductType, Integer idRoomType, Pageable pageable) {
-        return productRepository.findAllByRoomType_IdRoomTypeAndProductType_IdProductType(idProductType, idRoomType, pageable);
+    public Page<Product> findAllByRoomType_IdRoomTypeAndProductType_IdProductTypeAndNameProductContaining(Integer idProductType, Integer idRoomType, String name, Pageable pageable) {
+        return productRepository.findAllByRoomType_IdRoomTypeAndProductType_IdProductTypeAndNameProductContaining(idProductType, idRoomType, name, pageable);
     }
 
     @Override
     public Page<Product> findAllProductByPage(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Product> findAllProductByPrice() {
+        return productRepository.findAllProductByPrice();
+    }
+
+    @Override
+    public Product findProductById(Integer idProduct) {
+        return productRepository.findById(idProduct).get();
+    }
+
+    @Override
+    public List<Product> findAllByProductType_IdProductTypeOrderByIdProductDesc(Integer idProductType) {
+        return productRepository.findAllByProductType_IdProductTypeOrderByIdProductDesc(idProductType);
+    }
+
+    @Override
+    public void updateProduct(Product product) {
+         productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> findAllProductPopular() {
+        return productRepository.findAllProductPopular();
     }
 }

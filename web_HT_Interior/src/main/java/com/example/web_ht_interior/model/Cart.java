@@ -27,6 +27,21 @@ public class Cart {
     public Cart() {
     }
 
+    public Cart(Integer quantity, Boolean statusCart, Customer customer, Product product) {
+        this.quantity = quantity;
+        this.statusCart = statusCart;
+        this.customer = customer;
+        this.product = product;
+    }
+
+    public Cart(Integer quantity, LocalDate dateCreate, Boolean statusCart, Customer customer, Product product) {
+        this.quantity = quantity;
+        this.dateCreate = dateCreate;
+        this.statusCart = statusCart;
+        this.customer = customer;
+        this.product = product;
+    }
+
     public Cart(Integer idCart, Integer quantity, LocalDate dateCreate, Boolean statusCart, Customer customer, Product product) {
         this.idCart = idCart;
         this.quantity = quantity;

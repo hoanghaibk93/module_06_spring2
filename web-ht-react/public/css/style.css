@@ -181,6 +181,39 @@ img{
     /* background: rgba(0, 0, 0, 0.7); */
     object-fit: cover;
 }
+.banner-shop {
+    background-image:
+        url(../img/news/sofa.webp);
+    background-repeat: no-repeat;
+    background-size: 1350px 100%;
+    /* background: rgba(0, 0, 0, 0.7); */
+    object-fit: cover;
+}
+
+.banner-cart {
+    background-image:
+        url(https://theme.hstatic.net/200000065946/1000806110/14/slideshow_1.jpg?v=2645);
+    background-repeat: no-repeat;
+    background-size: 1350px 100%;
+    /* background: rgba(0, 0, 0, 0.7); */
+    object-fit: cover;
+}
+.banner-detail {
+    background-image:
+        url(https://www.jwmarriottemeraldbay.com/resourcefiles/homeimages/pinkpearl-main-dining-room.png?version=7152022094310);
+    background-repeat: no-repeat;
+    background-size: 1350px 100%;
+    /* background: rgba(0, 0, 0, 0.7); */
+    object-fit: cover;
+}
+.banner-history {
+    background-image:
+        url(https://theme.hstatic.net/1000406288/1000797845/14/slideshow_2.jpg?v=150);
+    background-repeat: no-repeat;
+    background-size: 1350px 100%;
+    /* background: rgba(0, 0, 0, 0.7); */
+    object-fit: cover;
+}
 .inner{
     width: 100%;
     background: rgba(0, 0, 0, 0.4);
@@ -208,8 +241,8 @@ img{
 } */
 
 .banner-sub-heading {
-    font-family: 'Sofia Pro Bold';
-    font-size: 35px;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;    
+    font-size: 50px;
     color: #F3F4F6;
     font-weight: 700;
     line-height: 1.2;
@@ -217,11 +250,12 @@ img{
     margin-bottom: 20px;
     padding-top: 200px;
     opacity: 2;
+    text-transform: uppercase;
 }
 
 .banner-heading {
-    font-size: 15px;
-    font-family: 'Sofia Pro Bold';
+    font-size: 22px;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     color: rgb(255, 255, 255);
     /* text-transform: uppercase; */
     line-height: 1.5;
@@ -249,7 +283,7 @@ img{
 .btn:link,
 .btn:visited{
     text-transform: uppercase;
-    /* text-decoration: none; */
+    
     padding: 15px 40px;
     display: inline-block;
     border-radius: 100px;
@@ -380,10 +414,11 @@ img{
     padding-top: 10px;
 }
 .service{
-    margin-top: 5px;
+    margin-top: 20px;
 }
 .service1{
-    margin: 0 5px;
+    /* margin: 0 5px; */
+    width: 100%;
     border: 1px solid rgba(0,0,0,.125);
 }
 .service-title{
@@ -398,6 +433,7 @@ img{
     font-weight: 500;
     margin: 0 30px;
     margin-bottom: 15px;
+    height: 40px;
 }
 .slash{
     content: '';
@@ -545,9 +581,11 @@ img{
 .name-product{
     font-weight: bold;
     font-size: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 0 !important;
     color: black;
+    padding: 0 4px;
     padding-top: 5px;
+    line-height: 20px;
 }
 .stars .fas{
     color: #c89551;
@@ -611,23 +649,24 @@ img{
 
 /* /////////////////////////// */
 .product{
-    margin: 0 5px;
+    /* margin: 0 5px; */
     box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
 }
 /* discount */
 .product{
     position: relative;
+    width: 100%;
 }
 .discount{
     position: absolute;
     top: 0;
     padding: 5px 20px;
-    background-color: #428eff;
+    background-color: #c7190c !important;
     height: 30px;
     font-size: 15px;
     font-weight: 500;
     color: white;
-    border-radius: 8px;
+    border-radius: 0 !important;
 }
 
 .slider{
@@ -685,11 +724,11 @@ img{
     font-weight: bold;
 }
 .nav-tabs{
-    /* justify-content: center; */
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 .feature-products .nav-item{
     font-size: 15px;
+    padding: 0;
 }
 .feature-products .nav-item .nav-link{
     color: #4e4e4e ;
@@ -959,12 +998,12 @@ img{
 }
 .comment-name{
      font-size: 30px;
-     color: white;
+     color: #c89551;
      margin-top: 20px;
 }
 .comment-text{
     font-size: 15px;
-    color: white;
+    color: #fff;
     width: 30%x;
 }
 .right .dashed-product{
@@ -990,7 +1029,7 @@ img{
     padding-right: 20px;
 }
 .comment{
-    color: white;
+    color: #000;
 }
 .person i,.comment i{
     color: white;

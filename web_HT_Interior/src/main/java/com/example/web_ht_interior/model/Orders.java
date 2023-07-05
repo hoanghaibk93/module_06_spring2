@@ -17,6 +17,14 @@ public class Orders {
     private LocalDate bookingDate;
     @Column(name="status_payment")
     private Boolean statusPayment;
+    @Column(name="address_shipping")
+    private String addressShipping;
+    @Column(name="name_receiver")
+    private String nameReceiver;
+    @Column(name="phone_number")
+    private String phoneNumber;
+    @Column(name="note")
+    private String note;
     @ManyToOne
     @JoinColumn(name = "id_customer")
     private Customer customer;
@@ -24,11 +32,26 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(Integer idOrder, Double totalPayment, LocalDate bookingDate, Boolean statusPayment, Customer customer) {
+    public Orders(Double totalPayment, LocalDate bookingDate, Boolean statusPayment, String addressShipping, String nameReceiver, String phoneNumber, String note, Customer customer) {
+        this.totalPayment = totalPayment;
+        this.bookingDate = bookingDate;
+        this.statusPayment = statusPayment;
+        this.addressShipping = addressShipping;
+        this.nameReceiver = nameReceiver;
+        this.phoneNumber = phoneNumber;
+        this.note = note;
+        this.customer = customer;
+    }
+
+    public Orders(Integer idOrder, Double totalPayment, LocalDate bookingDate, Boolean statusPayment, String addressShipping, String nameReceiver, String phoneNumber, String note, Customer customer) {
         this.idOrder = idOrder;
         this.totalPayment = totalPayment;
         this.bookingDate = bookingDate;
         this.statusPayment = statusPayment;
+        this.addressShipping = addressShipping;
+        this.nameReceiver = nameReceiver;
+        this.phoneNumber = phoneNumber;
+        this.note = note;
         this.customer = customer;
     }
 
@@ -62,6 +85,38 @@ public class Orders {
 
     public void setStatusPayment(Boolean statusPayment) {
         this.statusPayment = statusPayment;
+    }
+
+    public String getAddressShipping() {
+        return addressShipping;
+    }
+
+    public void setAddressShipping(String addressShipping) {
+        this.addressShipping = addressShipping;
+    }
+
+    public String getNameReceiver() {
+        return nameReceiver;
+    }
+
+    public void setNameReceiver(String nameReceiver) {
+        this.nameReceiver = nameReceiver;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Customer getCustomer() {

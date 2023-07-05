@@ -104,10 +104,13 @@ INSERT INTO `furniture_spring2`.`app_role` (`id_role`, `name_role`) VALUES ('1',
 INSERT INTO `furniture_spring2`.`app_role` (`id_role`, `name_role`) VALUES ('2', 'admin');
 INSERT INTO `furniture_spring2`.`app_user` (`id_user`, `name_user`, `encryted_password`) VALUES ('1', 'hoanghaibk93@gmail.com', '123456');
 INSERT INTO `furniture_spring2`.`app_user` (`id_user`, `name_user`, `encryted_password`) VALUES ('2', 'thitin93@gmail.com', '123456');
+
 INSERT INTO `furniture_spring2`.`user_role` (`id_role`, `id_user`) VALUES ('1', '1');
 INSERT INTO `furniture_spring2`.`user_role` (`id_role`, `id_user`) VALUES ('2', '2');
 INSERT INTO `furniture_spring2`.`customer` (`id_customer`, `name_customer`, `date_of_birth`, `gender`, `id_card`, `phone_number`, `email`, `address`, `id_user`) VALUES ('1', 'Hoàng Hải', '1993-04-11', 'Nam', '191794571', '0816345671', 'hoanghiabk93@gmail.com', 'Huế', '1');
 INSERT INTO `furniture_spring2`.`customer` (`id_customer`, `name_customer`, `date_of_birth`, `gender`, `id_card`, `phone_number`, `email`, `address`, `id_user`) VALUES ('2', 'Thị Tín', '1995-03-12', 'Nử', '1923723523', '0911899572', 'thitin1995@gmail.com', 'Đà Nẳng', '2');
+INSERT INTO `furniture_spring2`.`customer` (`id_customer`, `name_customer`, `date_of_birth`, `gender`, `id_card`, `phone_number`, `email`, `address`, `id_user`) VALUES ('3', 'Ánh Phúc', '1999-04-03', 'Nử', '191787534', '0911672534', 'anhPhuc1998@gmail.com', 'DN', '3');
+
 INSERT INTO `furniture_spring2`.`room_type` (`id_room_type`, `name_room_type`) VALUES ('1', 'Phòng khách');
 INSERT INTO `furniture_spring2`.`room_type` (`id_room_type`, `name_room_type`) VALUES ('2', 'Phòng ngủ');
 INSERT INTO `furniture_spring2`.`room_type` (`id_room_type`, `name_room_type`) VALUES ('3', 'Phòng bếp');
@@ -220,14 +223,43 @@ VALUES ('32', 'Quả địa cầu vàng lớn 15726J', 'Pila', 'Màu vàng + tr�
 INSERT INTO `furniture_spring2`.`product` (`id_product`, `name_product`, `brand`, `color`, `material`, `size`, `quantity`, `country_of_origin`, `introduce`, `description`, `image`, `original_price`, `sale_price`, `id_product_type`, `id_room_type`) 
 VALUES ('33', 'Bộ 2 tượng chặn sách Bookend hình con ngựa', 'Bookend', 'Màu trắng + vàng', 'nhôm', 'D156-R127-C290 mm', '5', 'Việt Nam', 'Một sản phẩm làm đồ trang trí văn phòng làm việc giúp không gian thêm phần sinh động, mang lại ấn tượng cá nhân riêng biệt.', 'Chất liệu bằng nhôm chắc chắn,bền đẹp. Bộ 2 tượng chặn sách Bookend hình con ngựa không chỉ dùng bảo quản sách tốt hơn, tránh tình trạng bị cong gáy, rách bìa mà còn là một sản phẩm decor đầy phong cách và sáng tạo.', 'img/dotrangtri/bochansach.jpg', '7000000', '6700000', '6', '1');
 
-
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '1320000' WHERE (`id_product` = '2');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '4500000' WHERE (`id_product` = '4');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '1500000' WHERE (`id_product` = '9');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '3800000' WHERE (`id_product` = '11');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '3800000' WHERE (`id_product` = '13');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '3800000' WHERE (`id_product` = '16');
+UPDATE `furniture_spring2`.`product` SET `original_price` = '2500000' WHERE (`id_product` = '18');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '7800000' WHERE (`id_product` = '20');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '1800000' WHERE (`id_product` = '22');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '18000000' WHERE (`id_product` = '25');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '8000000' WHERE (`id_product` = '28');
+UPDATE `furniture_spring2`.`product` SET `sale_price` = '7000000' WHERE (`id_product` = '31');
 
 INSERT INTO `furniture_spring2`.`cart` (`id_cart`, `id_product`, `id_customer`, `quantity`, `date_create`, `status_cart`) VALUES ('1', '1', '1', '3', '2023-06-06', 0 );
 INSERT INTO `furniture_spring2`.`cart` (`id_cart`, `id_product`, `id_customer`, `quantity`, `date_create`, `status_cart`) VALUES ('2', '2', '1', '4', '2023-06-17', 0);
 INSERT INTO `furniture_spring2`.`cart` (`id_cart`, `id_product`, `id_customer`, `quantity`, `date_create`, `status_cart`) VALUES ('3', '1', '2', '1', '2023-06-16', 1);
 INSERT INTO `furniture_spring2`.`cart` (`id_cart`, `id_product`, `id_customer`, `quantity`, `date_create`, `status_cart`) VALUES ('4', '2', '2', '1', '2023-06-16', 1);
+select * from product where original_price > sale_price order by id_product desc;
 
+-- select pr.name_product, pr.brand, pr.color, pr.material, pr.size, pr.quantity, pr. sum(quantity_order) as total from product pr
+-- inner join order_detail od on od.id_product = pr.id_product
+-- group by od.id_product
+-- order by total desc
+SELECT pr.*
+FROM product pr
+JOIN (
+  SELECT id_product, SUM(quantity_order) AS total_quantity_order
+  FROM order_detail
+  GROUP BY id_product
+) order_totals
+ON order_totals.id_product = pr.id_product
+ORDER BY order_totals.total_quantity_order DESC;
 
+select pr.name_product, pr.image, pr.sale_price, od.quantity_order, od.id_order from product pr
+inner join order_detail od on od.id_product = pr.id_product
+inner join orders ors on od.id_order = ors.id_order
+where od.id_order = 45
 
 
 

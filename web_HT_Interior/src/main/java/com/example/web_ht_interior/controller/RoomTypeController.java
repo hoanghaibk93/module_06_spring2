@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/room_type")
+@RequestMapping("/api/public/room_type")
 @CrossOrigin("*")
 public class RoomTypeController {
     @Autowired

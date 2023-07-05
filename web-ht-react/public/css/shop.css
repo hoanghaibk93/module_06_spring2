@@ -165,7 +165,7 @@ img{
         url(../img/news/sofa.webp);
     background-repeat: no-repeat;
     background-size: 1350px 100%;
-    /* background: rgba(0, 0, 0, 0.7); */
+  
     object-fit: cover;
 }
 .inner{
@@ -189,7 +189,8 @@ img{
 }
 .product-img{
     background-color: whitesmoke;
-    height: 200px;
+    height: 150px;
+    object-fit: cover;
 }
 .price-product .price{
     /* width: 100%; */
@@ -319,6 +320,7 @@ img{
     font-weight: 500;
     color: white;
     border-radius: 8px;
+    
 }
 /* main */
 .shop{

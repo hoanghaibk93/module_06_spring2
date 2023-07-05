@@ -213,11 +213,12 @@ img{
 }
 .product-img{
     background-color: whitesmoke;
-    height: 200px;
+    height: 150px;
+    object-fit: cover;
 }
 .price-product .price{
     /* width: 100%; */
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
     font-size: 20px;
     font-weight: bold;
     color: #EB2528; 
@@ -377,11 +378,11 @@ img{
 .detail .nav-item .nav-link.active{
     background-color: #c89551;
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     border-radius: 0px;
 }
 .tab-content>.active {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     width: 75%;
 }
 .tab-content{

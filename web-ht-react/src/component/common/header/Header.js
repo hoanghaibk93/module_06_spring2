@@ -1,12 +1,66 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthModal from '../../auth/AuthModal';
 import './Header.css'
 import React, { useState } from "react";
+import { Avatar } from "@mui/material";
+import { deepOrange, deepPurple } from '@mui/material/colors';
+import { useContext } from 'react';
+import { ValueIconCartContext } from '../../../service/ValueIconCartProvider';
+import { useEffect } from 'react';
+import { apiGetAllCart } from '../../../service/CartService';
 export const Header = () => {
+    const { valueIconCart, setValueIconCart } = useContext(ValueIconCartContext);
+    const auth = localStorage.getItem("token");
     const [showMenu, setShowMenu] = useState(false)
-    const toggleMenu =() => {
+    const toggleMenu = () => {
         setShowMenu(!showMenu);
     }
+    const [pageActive, setPageActive] = useState('home')
+    const handleActive = (page) => {
+        if (page === "home") {
+            setPageActive("home")
+        } else if (page === "product") {
+            setPageActive("product")
+        } else if (page === "new") {
+            setPageActive("new")
+        } else if (page === "contact") {
+            setPageActive("contact")
+        } else if (page === "introduce") {
+            setPageActive("introduce")
+        } else if (page === "cart") {
+            setPageActive("cart")
+        }
+    }
+    const navigate = useNavigate();
+    const username = localStorage.getItem("username");
+    const handleLogout = () => {
+        localStorage.clear();
+        setValueIconCart(0);
+        navigate("/");
+    }
+
+    const fetchValueIconCart = async () => {
+        try {
+            const result = await apiGetAllCart(auth);
+            const countIconCart = result?.map(item => item.quantity).reduce((a, b) => a + b, 0);
+            setValueIconCart(countIconCart)
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    useEffect(() => {
+        fetchValueIconCart()
+    }, [])
+    const account = JSON.parse(localStorage.getItem("account"))
+    const appRole = [];
+    if (account != null) {
+        for (let i = 0; i < account.roles?.length; i++) {
+            appRole.push(account.roles[i].authority)
+
+        }
+    }
+
     return (
         <>
             <div className="header">
@@ -80,7 +134,7 @@ export const Header = () => {
                                         <a href="/">
                                             <img
                                                 alt=""
-                                                src="img/LOGO3.png"
+                                                src="/img/LOGO3.png"
                                                 style={{ height: 30, width: "60%" }}
                                             />
                                         </a>
@@ -105,7 +159,8 @@ export const Header = () => {
                                             <li className="nav-item">
                                                 <Link
                                                     aria-current="page"
-                                                    className="nav-link active home"
+                                                    className={`nav-link active ${pageActive === 'home' ? 'home' : ''}`}
+                                                    onClick={() => { handleActive('home') }}
                                                     to="/"
                                                 >
                                                     Trang chủ
@@ -114,47 +169,174 @@ export const Header = () => {
                                             <li className="nav-item">
                                                 <Link
                                                     aria-current="page"
-                                                    className="nav-link active"
-                                                   to="/shop"
+                                                    className={`nav-link active ${pageActive === 'product' ? 'home' : ''}`}
+                                                    onClick={() => { handleActive('product') }}
+                                                    to="/shop"
                                                 >
                                                     Sản phẩm
                                                 </Link>
                                             </li>
                                             <li className="nav-item">
-                                                <a aria-current="page" className="nav-link active" href="">
+                                                <Link
+                                                    aria-current="page"
+                                                    className={`nav-link active ${pageActive === 'new' ? 'home' : ''}`}
+                                                    onClick={() => { handleActive('new') }}
+                                                    to="/shop"
+                                                >
                                                     Tin tức
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="nav-item">
-                                                <a aria-current="page" className="nav-link active" href="">
+                                                <Link
+                                                    aria-current="page"
+                                                    className={`nav-link active ${pageActive === 'contact' ? 'home' : ''}`}
+                                                    onClick={() => { handleActive('contact') }}
+                                                    to="/shop"
+                                                >
                                                     Liên hệ
-                                                </a>
+                                                </Link>
                                             </li>
                                             <li className="nav-item">
-                                                <a aria-current="page" className="nav-link active" href="">
+                                                <Link
+                                                    aria-current="page"
+                                                    className={`nav-link active ${pageActive === 'introduce' ? 'home' : ''}`}
+                                                    onClick={() => { handleActive('introduce') }}
+                                                    to="/shop"
+
+                                                >
                                                     Giới thiệu
-                                                </a>
+                                                </Link>
                                             </li>
                                         </ul>
                                     </div>
-                                    <ul className="icon-nav justify-content-end d-flex">
-                                        <li>
-                                            <a
-                                                className="icon-user"
-                                                data-bs-target="#exampleModal"
-                                                data-bs-toggle="modal"
-                                                href=""
-                                            >
-                                                <i className="fas fa-user-alt" />
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <Link className="icon-buy" to="/cart">
-                                                <i className="fas fa-shopping-cart" />
-                                                <div className="number-buy">0</div>
-                                            </Link>
-                                        </li>
-                                    </ul>
+                                    {appRole.includes("ADMIN") ? (
+                                        <ul className="icon-nav cart-total justify-content-end d-flex">
+
+                                            <li>
+                                                <div className="dropdown">
+                                                    <button
+                                                        className="dropdown-toggle"
+                                                        type="button"
+                                                        id="dropdownMenuButton1"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-expanded="false"
+                                                    >
+                                                        <Avatar sx={{ bgcolor: deepPurple[500], width: 24, height: 24 }} >{username[0].toUpperCase()}</Avatar>
+                                                    </button>
+                                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                        <li>
+
+                                                            <a className="dropdown-item" href="#">
+                                                                Quản lý nhân viên
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a className="dropdown-item" href="#">
+                                                                Quản lý khách hàng
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a className="dropdown-item" href="#">
+                                                                Quản lý sản phẩm
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a className="dropdown-item" href="#">
+                                                                Quản lý đơn hàng
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a className="dropdown-item" href="#">
+                                                                Quản lý tài khoản
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a className="dropdown-item" onClick={handleLogout}>
+
+                                                                Đăng xuất
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <Link
+                                                    className={`icon-buy ${pageActive === 'cart' ? 'home' : ''}`}
+                                                    onClick={() => { handleActive('cart') }}
+                                                    to='/cart'
+                                                >
+                                                    <i className="fas fa-shopping-cart" />
+                                                    <div className="number-buy">{valueIconCart}</div>
+                                                </Link>
+                                            </li>
+
+                                        </ul>
+                                    ) : appRole.includes("USER") ?
+                                        <ul className="icon-nav cart-total justify-content-between align-items-center d-flex">
+                                            <li>
+                                                <Link
+                                                    className={`icon-buy ${pageActive === 'cart' ? 'home' : ''}`}
+                                                    onClick={() => { handleActive('cart') }}
+                                                    to='/cart'
+                                                >
+                                                    <i className="fas fa-shopping-cart" />
+                                                    <div className="number-buy">{valueIconCart}</div>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <div className="dropdown">
+                                                    <button
+                                                        className="dropdown-toggle"
+                                                        type="button"
+                                                        id="dropdownMenuButton1"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-expanded="false"
+                                                    >
+                                                        <Avatar sx={{ bgcolor: deepPurple[500], width: 24, height: 24 }} >{username[0].toUpperCase()}</Avatar>
+                                                    </button>
+                                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                        <li>
+                                                            <Link to={`/information`} className="dropdown-item" href="#">
+                                                                Tài khoản của tôi
+                                                            </Link>
+                                                        </li>
+                                                        <li>
+                                                            <Link to={`/product/history`} className="dropdown-item" href="#">
+                                                                Lịch sử đặt hàng
+                                                            </Link>
+                                                        </li>
+                                                        <li>
+                                                            <a className="dropdown-item" onClick={handleLogout}>
+                                                                Đăng xuất
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        : (
+                                            <ul className="icon-nav justify-content-between align-items-center d-flex">
+            
+                                                <li>
+                                                    <Link className="icon-buy" to="/cart">
+                                                        <i className="fas fa-shopping-cart" />
+                                                        <div className="number-buy">0</div>
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <a
+                                                        className="icon-user"
+                                                        data-bs-target="#exampleModal"
+                                                        data-bs-toggle="modal"
+                                                        href=""
+                                                    >
+                                                        <i className="fas fa-user-alt" />
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        )}
                                 </div>
                             </nav>
                         </div>
@@ -220,7 +402,7 @@ export const Header = () => {
                     </div>
                 </div>
             </div>
-            <AuthModal/>
+            <AuthModal />
         </>
     );
 };

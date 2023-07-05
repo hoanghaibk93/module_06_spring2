@@ -193,8 +193,8 @@ img{
 }
 .price-product .price{
     /* width: 100%; */
-    margin-bottom: 5px;
-    font-size: 17px;
+    /* margin-bottom: 5px; */
+    font-size: 16px;
     font-weight: bold;
     color: #EB2528;
 }
@@ -291,6 +291,35 @@ img{
     color: black;
     padding-top: 5px;
 }
+.trang .search-name{
+    font-weight: bold;
+    font-size: 25px;
+    margin-top: 20px;
+    color: rgb(221, 34, 34);
+    padding-top: 5px;
+    text-align: center;
+
+}
+.trang .search-name2{
+    font-weight:100;
+    font-size: 15px;
+    margin-top: 30px;
+    color: rgb(221, 34, 34);
+    padding-top: 5px;
+    text-align: center;
+
+}
+.trang .icon-search{
+    font-size: 100px; 
+    text-align: center;
+    color: #EB2528;
+    display: flex;
+    align-items: center !important;
+    justify-content: center;
+}
+
+
+
 .stars .fas{
     color: #c89551;
 }
@@ -302,13 +331,14 @@ img{
     cursor: pointer;
 }
 .product{
-    margin: 0 5px;
+    /* margin: 0 5px; */
     box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
 }
 /* discount */
 .product{
     position: relative;
 }
+
 .discount{
     position: absolute;
     top: 0;
@@ -326,9 +356,11 @@ img{
     margin-bottom: 50px;
 }
 .boloc{
-    padding-top: 40px;
+    padding-top: 10px;
     padding-bottom: 10px;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
     /* padding-left: 40px; */
 }
 .boloc a{
@@ -338,11 +370,19 @@ img{
     color: #212529 ;
     width: 100px;
 }
-.giacao .giathap{
-    padding: 10px;
+.giacao,.giathap{
+    padding: 8px;
+    /* border-width: 1px; */
     border-radius: 8px;
     background-color: #F3F4F6;
     margin-right: 10px;
+    margin: 0;
+    cursor: pointer;
+}
+.giacao.active,.giathap.active{
+   /* border: solid #c89551 1px; */
+   background: #c89551;
+   color: #fff;
 }
 .center-background {
     margin-top: 5px;
@@ -355,7 +395,7 @@ img{
 }
 .filter{
     font-family: 'Roboto', sans-serif;;
-    margin-top: 115px;
+    margin-top: 66px;
 }
 .loaihang{
     margin-bottom: 10px;
@@ -401,7 +441,7 @@ img{
 }
 /* //////////////////////// */
 .product{
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 .product:before,
 .product:after {
@@ -589,12 +629,14 @@ img{
 }
 /* /////////////////////////////////////////// */
 /* responsive */
-.search input{
-    width: 85%;
-    border: none;
+.search-name input{
+    /* width: 85%; */
+    border: 8px;
     padding: 10px 20px;
+    height: 38px;
+    min-height: unset !important;
 }
-.search input:focus{
+.search-name input:focus{
     border: none;
 }
 hr{
@@ -722,19 +764,22 @@ input[checkbox]{
 }
 .selling-products{
     margin-top: 20px;
-    border: 1px solid rgba(0,0,0,.125)
+    border: 1px solid rgba(0,0,0,.125);
+    padding: 6px;
+    background: #fff;
 }
-.selling-products hr{
+/* .selling-products hr{
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-}
+} */
 .selling-title{
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     text-align: center;
-    margin: 0;
-    padding: 10px 0;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: solid #c89551 2px;
 }
 .selling-name{
     font-size: 15px;
@@ -931,8 +976,9 @@ input[checkbox]{
     color: #c89551;
 }
 .search-name{
-    width: 500px;
-    margin-right: 200px
+    /* width: 500px; */
+    /* margin-right: 200px */
+    flex-grow: 1;
 }
 .button-filter{
     margin-top: 20px;
@@ -952,8 +998,8 @@ input[checkbox]{
 .loaihang .type{
     width: 100%;
     padding-left: 20px;
-    margin: 30px 0;
-    height: 50px;
+    margin: 8px 0;
+    height: 40px;
     border-radius: unset;
 
 }
@@ -962,8 +1008,8 @@ input[checkbox]{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 50px;
-    font-size: 1.2rem;
+    margin-top: 20px;
+    font-size: 1rem;
     gap: 5px;
   }
   .pagination .page-num {
@@ -973,11 +1019,17 @@ input[checkbox]{
     font-weight: 500;
     color: #000;
     text-decoration: none;
+    border: solid transparent 1px;
   }
-  .pagination .active,
-  .pagination .page-num:hover {
+  .pagination .active .page-num {
     border-radius: 3px;
     text-decoration: none !important;
     background-color: #f26b38;
     color: #fff;
+  }
+  .pagination .page-num:hover {
+    border-radius: 3px;
+    text-decoration: none !important;
+    border: solid #f26b38 1px;
+
   }
